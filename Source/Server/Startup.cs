@@ -26,7 +26,7 @@ namespace Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddRazorPages();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -45,7 +45,8 @@ namespace Server
             }
 
             app.UseHttpsRedirection();
-
+            app.UseStaticFiles();
+            app.UseBlazorFrameworkFiles();
             app.UseRouting();
 
             app.UseAuthentication();
@@ -53,7 +54,9 @@ namespace Server
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages();
                 endpoints.MapControllers();
+                endpoints.MapFallbackToPage("/_Host");
             });
         }
     }
