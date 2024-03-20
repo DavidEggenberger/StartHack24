@@ -1,3 +1,4 @@
+using Blazored.Modal;
 using Client;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -11,6 +12,7 @@ namespace Client
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
+            builder.Services.AddBlazoredModal();
 
             await builder.Build().RunAsync();
         }

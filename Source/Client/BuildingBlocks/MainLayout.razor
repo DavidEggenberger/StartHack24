@@ -1,0 +1,38 @@
+﻿@inherits LayoutComponentBase
+@inject IModalService modalService
+
+<div class="h-screen w-screen">
+    <nav class="p-[20px] h-[65px] max-w-[1400px] ml-auto mr-auto w-full pb-0 flex flex-row content-start justify-between items-end">
+        <div>
+            <a id="start" href="/">
+                <h1 class="text-4xl">Start Fellowship<span class="text-[46px]"></span></h1>
+            </a>
+        </div>
+        <div class="flex flex-row gap-x-3">
+            <a href="/about">
+                <span class="text-xl cursor-pointer p-1">About</span>
+            </a>
+            <button @onclick="() => OpenSignUpModal()" target="_blank" href="/swagger/index.html">
+                <span class="text-xl hover:bg-orange border border-1 border-black cursor-pointer p-1 rounded">Signin</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="p-[20px] overflow-y-auto h-[calc(100%-65px)] max-w-[1400px] ml-auto mr-auto w-full">
+        @Body
+    </main>
+</div>
+
+@code{
+    private IModalReference modalReference;
+
+    public void OpenSignUpModal()
+    {
+        var modelParameters = new ModalParameters
+        {
+            { nameof(LoginModal.CancelRequestedCallback), new EventCallback(this, () => modalReference.Close()) }
+        };
+
+        modalReference = modalService.Show<LoginModal>(string.Empty, modelParameters, DefaultModalOptions.Modal);
+    }
+}

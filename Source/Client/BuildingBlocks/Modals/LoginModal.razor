@@ -1,0 +1,37 @@
+﻿<div class="flex flex-col gap-y-[15px] pt-[20px] pl-1 w-[350px]">
+    <div class="flex flex-col items-center mt-2">
+        <h3 class="text-[24px]">Sign in to your account</h3>
+    </div>
+    <div class="flex flex-col gap-y-[5px] items-center">
+        <div class="flex flex-col gap-y-[10px] items-center">
+            <a href="/api/login/Google" class="h-[41px] w-[215px] flex flex-column items-center bg-[#F2F2F2] gap-x-[10px]">
+                <img src="/icons/signinproviders/google.png" class="h-[41px]" />
+                <span>Sign in with Google</span>
+            </a>
+            <a href="/api/identity/login/GitHub">
+                <img src="/icons/signinproviders/microsoft.png" />
+            </a>
+            <a href="/api/identity/login/google">
+                <img src="/icons/signinproviders/linkedin.png" />
+            </a>
+        </div>
+    </div>
+    <div class="flex flex-row justify-end">
+        <button @onclick="async () => await CancelRequestedAsync()" class="font-semibold rounded-[3px] p-[5px] text-[15px] bg-grey-200 hover:bg-grey-300">Cancel</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback CancelRequestedCallback { get; set; }
+
+    private bool switchToSignUp;
+
+    public async Task CancelRequestedAsync()
+    {
+        if (CancelRequestedCallback.HasDelegate)
+        {
+            await CancelRequestedCallback.InvokeAsync(this);
+        }
+    }
+}
