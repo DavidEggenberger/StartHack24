@@ -1,0 +1,22 @@
+﻿@page "/"
+
+<AuthorizeView>
+    <NotAuthorized>
+        <div class="h-full grid place-content-center">
+            <div class="mt-[-40px] text-center">
+                <h2 class="text-3xl">Welcome to the Start Fellowship web app!</h2>
+                <h3 class="text-xl">Startup Founders can keep in contact with the Admins of the Accelerator programm</h3>
+            </div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+<AuthorizeView Roles="Founder">
+    <div class="h-full grid">
+        <FounderDashboardComponent/>
+    </div>
+</AuthorizeView>
+<AuthorizeView Roles="Accelerator">
+    <div class="h-full grid">
+        <AcceleratorDashboardComponent />
+    </div>
+</AuthorizeView>
