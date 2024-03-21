@@ -84,5 +84,47 @@ namespace Server.Features.UserIdentity
             await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
             return Redirect("/");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ExternalLoginCallback(string ReturnUrl = null)
+        {
+            var info = await signInManager.GetExternalLoginInfoAsync();
+            if (info.Principal == null)
+            {
+                return Redirect("/User/Login");
+            }
+            var user = await userManager.FindByNameAsync(info.Principal.Identity.Name);
+            if (info is not null && user is null)
+            {
+                ApplicationUser _user = new ApplicationUser
+                {
+                    UserName = info.Principal.Identity.Name,
+                    PictureURI = info.Principal.Claims.Where(claim => claim.Type == "picture").First().Value
+                };
+
+                var result = await userManager.CreateAsync(_user);
+
+                if (result.Succeeded)
+                {
+                    result = await userManager.AddLoginAsync(_user, info);
+                    await signInManager.SignInAsync(_user, isPersistent: false, info.LoginProvider);
+                    return LocalRedirect("/");
+                }
+            }
+
+            string pictureURI = info.Principal.Claims.Where(claim => claim.Type == "picture").First().Value;
+            if (user.PictureURI != pictureURI)
+            {
+                user.PictureURI = pictureURI;
+                await userManager.UpdateAsync(user);
+            }
+
+            var signInResult = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: false);
+            return signInResult switch
+            {
+                Microsoft.AspNetCore.Identity.SignInResult { Succeeded: true } => LocalRedirect("/"),
+                _ => Redirect("/Error")
+            };
+        }
     }
 }

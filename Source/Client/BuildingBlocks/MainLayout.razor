@@ -46,7 +46,7 @@
     {
         var modelParameters = new ModalParameters
         {
-            { nameof(LoginModal.CancelRequestedCallback), new EventCallback(this, () => modalReference.Close()) }
+            { nameof(LoginModal.CancelRequestedCallback), new EventCallback(this, () => modalReference.Close()) },
         };
 
         modalReference = modalService.Show<LoginModal>(string.Empty, modelParameters, DefaultModalOptions.Modal);

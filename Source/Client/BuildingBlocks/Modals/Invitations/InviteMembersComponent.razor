@@ -1,0 +1,46 @@
+﻿<div class="flex flex-col gap-y-[15px] pt-[20px] w-[350px]">
+    <div class="flex flex-col items-center mt-2">
+        <h3 class="text-[24px] mb-4 text-orange">Invite a new @InvitationType</h3>
+    </div>
+    <div class="flex flex-col gap-y-[15px] items-center mb-4">
+        <div class="flex flex-col gap-y-[10px] items-center">
+            <div class="mt-2">
+                <label class="mb-1 block text-md font-medium text-gray-900 dark:text-white">The email address of the new @InvitationType</label>
+                <input type="email" class="bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
+            </div>
+            
+            <h3>
+                <label class="w-[260px] text-center mb-1 block text-md text-gray-900 dark:text-white">The invited @InvitationType will receive the email with the signin link</label>
+            </h3>
+
+        </div>
+    </div>
+    <div class="flex flex-rwo gap-x-3 justify-end">
+        <div class="flex flex-row justify-end">
+            <button @onclick="async () => await CancelRequestedAsync()" class="font-semibold rounded-[3px] p-[5px] text-[15px] bg-orange text-white hover:bg-white hover:text-orange hover:border-orange">Invite new @InvitationType</button>
+        </div>
+
+        <div class="flex flex-row justify-end">
+            <button @onclick="async () => await CancelRequestedAsync()" class="font-semibold rounded-[3px] p-[5px] text-[15px] bg-grey-200 hover:bg-grey-300">Cancel</button>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public EventCallback CancelRequestedCallback { get; set; }
+
+    private bool switchToSignUp;
+
+    [Parameter]
+    public string InvitationType { get; set; }
+
+    public async Task CancelRequestedAsync()
+    {
+        if (CancelRequestedCallback.HasDelegate)
+        {
+            await CancelRequestedCallback.InvokeAsync(this);
+        }
+    }
+}
