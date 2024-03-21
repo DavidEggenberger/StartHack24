@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Server.Features;
 using Server.Features.UserIdentity.Domain;
+using Server.Features.EmailSender;
 
 namespace Server
 {
@@ -40,6 +41,8 @@ namespace Server
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Server", Version = "v1" });
             });
+
+            services.AddScoped<EmailSender>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {

@@ -656,6 +656,10 @@ video {
   width: 215px;
 }
 
+.w-\[260px\] {
+  width: 260px;
+}
+
 .w-\[34px\] {
   width: 34px;
 }
@@ -670,10 +674,6 @@ video {
 
 .w-screen {
   width: 100vw;
-}
-
-.w-\[260px\] {
-  width: 260px;
 }
 
 .max-w-\[1400px\] {
@@ -778,10 +778,6 @@ video {
 
 .gap-y-\[15px\] {
   row-gap: 15px;
-}
-
-.gap-y-\[4px\] {
-  row-gap: 4px;
 }
 
 .self-start {
@@ -898,10 +894,6 @@ video {
 
 .pb-2 {
   padding-bottom: 0.5rem;
-}
-
-.pl-1 {
-  padding-left: 0.25rem;
 }
 
 .pt-3 {

@@ -1,4 +1,8 @@
-﻿<div class="flex flex-col gap-y-[15px] pt-[20px] w-[350px]">
+﻿@using Client.BuildingBlocks.Http
+@using Shared.UserIdentity
+@inject HttpClientService httpClientService
+
+<div class="flex flex-col gap-y-[15px] pt-[20px] w-[350px]">
     <div class="flex flex-col items-center mt-2">
         <h3 class="text-[24px] mb-4 text-orange">Invite a new @InvitationType</h3>
     </div>
@@ -6,7 +10,7 @@
         <div class="flex flex-col gap-y-[10px] items-center">
             <div class="mt-2">
                 <label class="mb-1 block text-md font-medium text-gray-900 dark:text-white">The email address of the new @InvitationType</label>
-                <input type="email" class="bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
+                <input @bind-value="email" @bind-value:event="oninput" type="email" class="bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
             </div>
             
             <h3>
@@ -17,7 +21,7 @@
     </div>
     <div class="flex flex-rwo gap-x-3 justify-end">
         <div class="flex flex-row justify-end">
-            <button @onclick="async () => await CancelRequestedAsync()" class="font-semibold rounded-[3px] p-[5px] text-[15px] bg-orange text-white hover:bg-white hover:text-orange hover:border-orange">Invite new @InvitationType</button>
+            <button @onclick="async () => await InviteMemberAsync(InvitationType)" class="hover:border-orange border font-semibold rounded-[3px] p-[5px] text-[15px] bg-orange text-white hover:bg-white hover:text-orange">Invite new @InvitationType</button>
         </div>
 
         <div class="flex flex-row justify-end">
@@ -31,6 +35,8 @@
     [Parameter]
     public EventCallback CancelRequestedCallback { get; set; }
 
+    private string email;
+
     private bool switchToSignUp;
 
     [Parameter]
@@ -42,5 +48,10 @@
         {
             await CancelRequestedCallback.InvokeAsync(this);
         }
+    }
+
+    public async Task InviteMemberAsync(string type)
+    {
+        await httpClientService.PostToAPIAsync("/identity", new InviteUserDTO { Email = email, Type = InvitationType });
     }
 }

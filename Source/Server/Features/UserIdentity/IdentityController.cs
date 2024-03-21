@@ -85,6 +85,12 @@ namespace Server.Features.UserIdentity
             return Redirect("/");
         }
 
+        [HttpPost]
+        public async Task InviteUser([FromBody] InviteUserDTO inviteUserDTO)
+        {
+
+        }
+
         [HttpGet]
         public async Task<IActionResult> ExternalLoginCallback(string ReturnUrl = null)
         {
