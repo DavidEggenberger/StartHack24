@@ -10,9 +10,10 @@ namespace Server.Features.ContentFeed
     public class ContentFeedsController : ControllerBase
     {
         [HttpPost]
-        public async Task CreateContentFeed(ContentFeedDTO contentFeedDTO)
+        public async Task<ActionResult<ContentFeedDTO>> CreateContentFeed(ContentFeedDTO contentFeedDTO)
         {
 
+            return Ok(contentFeedDTO);
         }
     }
 }

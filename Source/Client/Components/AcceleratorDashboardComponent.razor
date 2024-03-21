@@ -1,6 +1,8 @@
-﻿@using Client.BuildingBlocks.Modals.Invitations
+﻿@using Client.BuildingBlocks.Http
+@using Client.BuildingBlocks.Modals.Invitations
 @using Microsoft.AspNetCore.SignalR.Client
 @inject IModalService modalService
+@inject HttpClientService httpClientService
 
 <div class="h-full w-full grid grid-rows-[90px_2fr] gap-y-6">
     <div class="mt-3 flex flex-row gap-x-3 justify-between">
@@ -11,7 +13,7 @@
         <div class="flex flex-row ml-5 gap-x-3">
             <div class="w-[190px] rounded rounded-b-none border-orange border-b-[6px] bg-grey-200 p-1 flex flex-row">
                 <div class="self-end">
-                    <h3 class="text-xl font-medium">123</h3>
+                    <h3 class="text-xl font-medium">@fellowCount</h3>
                     <h3>Supported Fellows</h3>
                 </div>
             </div>
@@ -21,8 +23,11 @@
                     <h3>Funding for fellows</h3>
                 </div>
             </div>
-            <div class="w-[190px] rounded rounded-b-none border-orange border-b-[6px] bg-grey-200">
-
+            <div class="w-[190px] rounded rounded-b-none border-orange border-b-[6px] bg-grey-200 p-1 flex flex-row">
+                <div class="self-end">
+                    <h3 class="text-xl font-medium">@startupCount</h3>
+                    <h3>Tracked startups</h3>
+                </div>
             </div>
             <div class="w-[34px] rounded rounded-b-none rounded-r-none border-orange border-b-[6px] bg-grey-200 grid justify-center content-end	">
                 <img class="mb-2 cursor-pointer" src="/icons/settings.png" />
@@ -68,6 +73,11 @@
 
 @code {
     private IModalReference modalReference;
+    private int fellowCount;
+    private int startupCount;
+
+    [CascadingParameter]
+    public HubConnection HubConnection { get; set; }
 
     public void OpenSignUpModal(string type)
     {
@@ -90,5 +100,17 @@
         };
 
         modalReference = modalService.Show<CreateStartupModal>(string.Empty, modelParameters, DefaultModalOptions.Modal);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        fellowCount = await httpClientService.GetFromAPIAsync<int>("/founders/count");
+        startupCount = await httpClientService.GetFromAPIAsync<int>("/startups/count");
+
+        HubConnection.On("/NewStartup", async () =>
+        {
+            startupCount = await httpClientService.GetFromAPIAsync<int>("/startups/count");
+            StateHasChanged();
+        });
     }
 }

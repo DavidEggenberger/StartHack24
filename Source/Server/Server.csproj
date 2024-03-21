@@ -26,4 +26,8 @@
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\LandingPagesTracking\" />
+  </ItemGroup>
+
 </Project>

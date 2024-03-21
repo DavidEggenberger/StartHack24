@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Server.Features.EFCore;
 using Server.Features.Startups.Domain;
 using Shared.Founders;
 using Shared.Startup;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Server.Features.Founders
@@ -20,6 +22,12 @@ namespace Server.Features.Founders
         {
             this.invitationCodesCollection = invitationCodesCollection;
             this.applicationDbContext = applicationDbContext;
+        }
+
+        [HttpGet("count")]
+        public async Task<int> GetFoundersCount()
+        {
+            return await applicationDbContext.Founders.CountAsync();
         }
 
         [HttpGet]

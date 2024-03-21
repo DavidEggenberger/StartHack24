@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Server.Features.EFCore;
 using Server.Features.Startups.Domain;
 using Server.Hubs;
@@ -34,6 +35,12 @@ namespace Server.Features.Startups
                 Discipline = s.Discipline,
                 Name = s.Name
             }).ToList();
+        }
+
+        [HttpGet("count")]
+        public async Task<int> GetFoundersCount()
+        {
+            return await applicationDbContext.Startups.CountAsync();
         }
 
         [HttpPost]

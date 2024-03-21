@@ -14,7 +14,7 @@ namespace Shared.Startup
 
         public override string ToString()
         {
-            return FounderName + URI + Discipline;
+            return FounderName + URI + Discipline + Name;
         }
     }
 }
