@@ -1,0 +1,9 @@
+﻿.modaloverlay {
+    background-color: rgba(255, 206, 177, 0.3) !important;
+}
+.modal{
+    box-shadow: none !important;
+}
+.blazored-modal{
+    box-shadow: none !important;
+}

@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject IModalService modalService
+@inject HostAuthenticationStateProvider provider
 
 <div class="h-screen w-screen">
     <nav class="p-[20px] h-[65px] max-w-[1400px] ml-auto mr-auto w-full pb-0 flex flex-row content-start justify-between items-end">
@@ -9,12 +10,27 @@
             </a>
         </div>
         <div class="flex flex-row gap-x-3">
-            <a href="/about">
-                <span class="text-xl cursor-pointer p-1">About</span>
-            </a>
-            <button @onclick="() => OpenSignUpModal()" target="_blank" href="/swagger/index.html">
-                <span class="text-xl hover:bg-orange border border-1 border-black cursor-pointer p-1 rounded">Signin</span>
-            </button>
+            <AuthorizeView>
+                <NotAuthorized>
+                    <a href="/about">
+                        <span class="text-xl cursor-pointer p-1">About</span>
+                    </a>
+                    <a target="_blank" href="/swagger/index.html">
+                        <span class="text-xl cursor-pointer p-1">Our API</span>
+                    </a>
+                    <button @onclick="() => OpenSignUpModal()" target="_blank" href="/swagger/index.html">
+                        <span class="text-xl hover:bg-orange border border-1 border-black cursor-pointer p-1 rounded">Signin</span>
+                    </button>
+                </NotAuthorized>
+                <Authorized>
+                    <a href="/about">
+                        <span class="text-xl cursor-pointer p-1">Welcome @context?.User?.Identity?.Name!</span>
+                    </a>
+                    <button @onclick="() => provider.SignOut()" target="_blank" href="/swagger/index.html">
+                        <span class="text-xl hover:bg-orange border border-1 border-black cursor-pointer p-1 rounded">Sign out</span>
+                    </button>
+                </Authorized>
+            </AuthorizeView>
         </div>
     </nav>
 
