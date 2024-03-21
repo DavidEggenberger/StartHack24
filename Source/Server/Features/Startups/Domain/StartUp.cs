@@ -9,5 +9,7 @@ namespace Server.Features.Startups.Domain
         public string URI { get; set; }
         public string Location { get; set; }
         public string Discipline { get; set; }
+        public string Description { get; set; }
+        public string Batch { get; set; }
     }
 }

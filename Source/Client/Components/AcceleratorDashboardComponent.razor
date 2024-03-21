@@ -34,7 +34,7 @@
             </div>
         </div>
     </div>
-    <div class="grid grid-cols-[1fr_2fr_1fr] gap-x-4 mb-3">
+    <div class="grid grid-cols-[1fr_2fr_0.7fr] gap-x-4 mb-3">
         <div class="bg-white rounded border border-black">
             <FounderStartupOverviewComponent/>
         </div>
@@ -52,17 +52,17 @@
                 <div class="flex flex-col gap-y-2 mt-4 self-start">
                     <div class="flex flex-row gap-x-3">
                         <button @onclick='() => OpenSignUpModal("guest")' class="flex-1 text-md hover:bg-orange border hover:text-white border-1 border-black cursor-pointer p-1 rounded" target="_blank" href="/swagger/index.html">
-                            <span>Invite new guest</span>
+                            <span>Invite guest</span>
                         </button>
                         <button @onclick='() => OpenSignUpModal("admin")' class="flex-1 text-md hover:bg-orange hover:text-white border border-1 border-black cursor-pointer p-1 rounded" target="_blank" href="/swagger/index.html">
-                            <span >Invite new admin</span>
+                            <span >Invite admin</span>
                         </button>
                     </div>
                     <button @onclick='() => OpenCreateStartupModal()' class="w-full text-md hover:bg-orange hover:text-white border border-1 border-black cursor-pointer p-1 rounded" target="_blank" href="/swagger/index.html">
-                        <span>Add a new startup</span>
+                        <span>Add a startup</span>
                     </button>
                     <button @onclick='() => OpenSignUpModal("fellow")' class="w-full text-md text-white bg-orange hover:bg-white hover:text-orange hover:border-orange border border-1 border-black cursor-pointer p-1 rounded" target="_blank" href="/swagger/index.html">
-                        <span >Invite new fellow</span>
+                        <span >Invite fellow</span>
                     </button>        
                 </div>
 

@@ -11,6 +11,8 @@ namespace Shared.Startup
         public string FounderName { get; set; }
         public string URI { get; set; }
         public string Discipline { get; set; }
+        public string Description { get; set; }
+        public string Batch { get; set; }
 
         public override string ToString()
         {

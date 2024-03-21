@@ -33,7 +33,9 @@ namespace Server.Features.Startups
                 Location = s.Location,
                 URI = s.URI,
                 Discipline = s.Discipline,
-                Name = s.Name
+                Name = s.Name,
+                Description = s.Description,
+                Batch = s.Batch
             }).ToList();
         }
 
@@ -51,7 +53,9 @@ namespace Server.Features.Startups
                 Location = startupDTO.Location,
                 Name = startupDTO.Name,
                 URI = startupDTO.URI,
-                Discipline = startupDTO.Discipline
+                Discipline = startupDTO.Discipline,
+                Description = startupDTO.Description,
+                Batch = startupDTO.Batch
             };
 
             applicationDbContext.Startups.Add(startup);
@@ -61,6 +65,14 @@ namespace Server.Features.Startups
             await hubContext.Clients.All.SendAsync("StartupChange");
 
             return Ok();
+        }
+
+        [HttpDelete]
+        public async Task DeleteAllStartups()
+        {
+            applicationDbContext.Startups.ExecuteDelete();
+
+            await applicationDbContext.SaveChangesAsync();
         }
     }
 }

@@ -14,6 +14,9 @@
                 <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Website</label>
                 <input @bind-value="startup.URI" @bind-value:event="oninput" type="url" class="mb-2 bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
 
+                <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Short description</label>
+                <input style="width: 270px;" @bind-value="startup.Description" @bind-value:event="oninput" type="url" class="mb-2 w-[240px] bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
+
                 <div class="flex flex-row gap-x-3">
                     <div class="flex-1">
                         <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Location</label>
@@ -67,7 +70,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        startup = new StartupDTO();
+        startup = new StartupDTO() { Discipline = "SaaS", Batch = "2024" };
     }
 
     public async Task CreateStartupAsync()
