@@ -19,7 +19,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Server.Features;
 using Server.Features.UserIdentity.Domain;
-using Server.Features.EmailSender;
 
 namespace Server
 {
@@ -43,6 +42,7 @@ namespace Server
             });
 
             services.AddScoped<EmailSender>();
+            services.AddSingleton<InvitationCodesCollection>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {

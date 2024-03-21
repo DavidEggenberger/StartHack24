@@ -1,0 +1,50 @@
+﻿@page "/invitationLink/{invitationCode}"
+@using Shared.Startup
+
+<AuthorizeView>
+    <NotAuthorized>
+        <div class="w-full h-full text-black grid content-center">
+            <div class="mt-[-80px]">
+                <h3 class="text-xl text-center">Welcome to Fellowship Finder</h3>
+                <h5 class="text-lg text-center">Please fill out the form to complete your registration</h5>
+
+                <div class="w-full grid justify-center mt-5">
+                    <div class="w-[340px] grid content-center w-full">
+                        <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Your Full Name</label>
+                        <input  type="text" class="mb-2 bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
+
+                        <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Your Startups name</label>
+                        <input @bind-value="startup.Name" @bind-value:event="oninput" type="text" class="mb-2 bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
+
+                        <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Your Startups website</label>
+                        <input @bind-value="startup.URI" @bind-value:event="oninput" type="url" class="mb-2 bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
+
+                        <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Your location</label>
+                        <select @bind-value="startup.Location" @bind-value:event="oninput" class="bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500">
+                            <option>Argentina</option>
+                            <option>Brasil</option>
+                            <option>Ecuador</option>
+                        </select>
+
+                        <button @onclick='() => {}' class="self-end mt-3 w-[75px] text-md text-white bg-orange hover:bg-white hover:text-orange hover:border-orange border border-1 border-black cursor-pointer p-1 rounded" target="_blank" href="/swagger/index.html">
+                            <span>Register</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code{
+    [Parameter]
+    public string invitationCode { get; set; }
+
+    StartupDTO startup;
+
+    protected override async Task OnInitializedAsync()
+    {
+        startup = new StartupDTO();
+    }
+}

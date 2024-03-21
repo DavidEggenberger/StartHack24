@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Hosting;
 using Server.Features.UserIdentity.Domain;
 using Shared.UserIdentity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -19,11 +22,17 @@ namespace Server.Features.UserIdentity
     {
         private SignInManager<ApplicationUser> signInManager;
         private UserManager<ApplicationUser> userManager;
+        private EmailSender emailSender;
+        private InvitationCodesCollection invitationCodesCollection;
+        private IWebHostEnvironment webHostEnvironment;
 
-        public IdentityController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+        public IdentityController(SignInManager<ApplicationUser> signInManager, IWebHostEnvironment webHostEnvironment, UserManager<ApplicationUser> userManager, InvitationCodesCollection invitationCodesCollection, EmailSender emailSender)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
+            this.emailSender = emailSender;
+            this.invitationCodesCollection = invitationCodesCollection;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet("login/{provider}")]
@@ -88,7 +97,15 @@ namespace Server.Features.UserIdentity
         [HttpPost]
         public async Task InviteUser([FromBody] InviteUserDTO inviteUserDTO)
         {
+            var invitationCode = Guid.NewGuid();
+            invitationCodesCollection.AddInvitationCode(invitationCode);
 
+            var message = $@"
+                <h3>You are invited as a {inviteUserDTO.Type} to Fellowship Finder</h3>
+                <h5><a href='{(webHostEnvironment.IsDevelopment() ? $"https://localhost:44324/invitationLink/{invitationCode}" : "")}' />Please visit the link to finish your registration</h5>
+            ";
+
+            await emailSender.SendEmailAsync(inviteUserDTO.Type, message, inviteUserDTO.Email);
         }
 
         [HttpGet]

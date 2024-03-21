@@ -53,5 +53,6 @@
     public async Task InviteMemberAsync(string type)
     {
         await httpClientService.PostToAPIAsync("/identity", new InviteUserDTO { Email = email, Type = InvitationType });
+        await CancelRequestedCallback.InvokeAsync(this);
     }
 }
