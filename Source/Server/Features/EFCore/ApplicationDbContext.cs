@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Server.Features.ContentFeed;
 using Server.Features.Founders.Domain;
 using Server.Features.Startups.Domain;
 
@@ -11,6 +12,7 @@ namespace Server.Features.EFCore
 
         public DbSet<StartUp> Startups { get; set; }
         public DbSet<Founder> Founders { get; set; }
+        public DbSet<StartupContent> StartupContents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -24,6 +26,14 @@ namespace Server.Features.EFCore
                     FounderEmail = "test.founder@fellowship.com",
                     Name = "Cleantech",
                     URI = "www.cleantech.com",
+                    Id = System.Guid.NewGuid()
+                });
+
+            builder.Entity<Founder>()
+                .HasData(new Founder
+                {
+                    Email = "test.founder@fellowship.com",
+                    MobileNumber = "1234567",
                     Id = System.Guid.NewGuid()
                 });
 

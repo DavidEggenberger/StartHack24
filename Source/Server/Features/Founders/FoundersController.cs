@@ -81,5 +81,33 @@ namespace Server.Features.Founders
 
             return Ok(startup);
         }
+
+        [HttpGet("phoneNumber")]
+        public async Task<string> GetPhoneNumber()
+        {
+            var email = User.Claims.First(c => c.Type == ClaimTypes.Email).Value;
+
+            var founder = await applicationDbContext.Founders
+                .Where(s => s.Email == email)
+                .FirstAsync();
+
+            return founder.MobileNumber;
+        }
+
+        [HttpGet("updatePhoneNumber/{number}")]
+        public async Task<int> UpdatePhoneNumber(string number)
+        {
+            var email = User.Claims.First(c => c.Type == ClaimTypes.Email).Value;
+
+            var founder = await applicationDbContext.Founders
+                .Where(s => s.Email == email)
+                .FirstAsync();
+
+            founder.MobileNumber = number;
+
+            await applicationDbContext.SaveChangesAsync();
+
+            return 0;
+        }
     }
 }

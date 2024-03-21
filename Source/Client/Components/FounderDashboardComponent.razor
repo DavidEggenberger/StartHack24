@@ -33,7 +33,7 @@
             </div>
         </div>
     </div>
-    <div class="grid grid-cols-[1fr_2fr] gap-x-4 mb-3">
+    <div class="grid grid-cols-[1fr_1fr_0.6fr] gap-x-4 mb-3">
         <div class="w-full h-full">
             <h2 class="text-xl font-normal">Update your Start-up</h2>
             <div class="w-full grid justify-start mt-3">
@@ -74,7 +74,18 @@
                     </button>
                 </div>
             </div>
+            </div>
         </div>
+        <div class="h-full w-full">
+
+        </div>
+        <div class="h-full w-full">
+            <h2 class="text-xl font-normal mt-5">Stay connected</h2>
+            <label class="mb-1.5 block text-sm text-gray-900 dark:text-white mt-3">Your mobile number. If provided you can conveniently stay in touch through whats-app.</label>
+            <input value="@mobileNumber" @onchange="async args => await UpdatePhoneNumberasync(args)" type="text" class="mb-2 bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
+
+            <label class="mb-1.5 block text-sm text-gray-900 dark:text-white">If you have a newsletter, please add this email to your subscriber list. This allows us to automatically read the emails contents and add them to our startup knowledge database.</label>
+            <input readonly style="width: 330px;" @bind-value="startup.Description" @bind-value:event="oninput" type="url" class="mb-2 w-[240px] bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
         </div>
     </div>
 </div>
@@ -83,6 +94,13 @@
     private int fellowCount;
     private int startupCount;
 
+    private string mobileNumber;
+
+    private async Task UpdatePhoneNumberasync(ChangeEventArgs changeEventArgs)
+    {
+        await httpClientService.GetFromAPIAsync<int>($"/founders/updatePhoneNumber/{changeEventArgs.Value}");
+    }
+
     private StartupDTO startup;
 
     [CascadingParameter]
@@ -90,6 +108,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        mobileNumber = await httpClientService.GetFromAPIAsync<string>("/founders/phonenumber");
+
         fellowCount = await httpClientService.GetFromAPIAsync<int>("/founders/count");
         startupCount = await httpClientService.GetFromAPIAsync<int>("/startups/count");
 

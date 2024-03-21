@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Server.Features.EFCore;
 
@@ -11,9 +12,11 @@ using Server.Features.EFCore;
 namespace Server.Features.EFCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240321182721_founderEmail")]
+    partial class founderEmail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -260,7 +263,7 @@ namespace Server.Features.EFCore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8822364a-4721-4b81-baf0-0ad75aab7034"),
+                            Id = new Guid("729a4768-fc7e-422b-8221-c3eef3628df5"),
                             Email = "test.founder@fellowship.com",
                             MobileNumber = "1234567"
                         });
@@ -300,7 +303,7 @@ namespace Server.Features.EFCore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3db246c3-a057-4d27-b967-b78dda2addd5"),
+                            Id = new Guid("4f66a9c1-fc2b-476b-9109-d223b5e16f74"),
                             Batch = "2024",
                             Description = "SaaS for cleaning companies",
                             Discipline = "SaaS",
