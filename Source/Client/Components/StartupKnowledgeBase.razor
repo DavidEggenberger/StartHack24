@@ -1,0 +1,156 @@
+﻿@using Client.BuildingBlocks.Http
+@using Shared.ContentFeed
+@inject HttpClientService httpClientService
+@inject IModalService modalService
+
+<div class="w-full h-full p-2 pt-3">
+    <div class="pb-2">
+        <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Startup/Founder knowledge base</label>
+        <div class="grid justify-between">
+            <input placeholder="Search" style="width: 280px;" @bind-value="SearchWord" @bind-value:event="oninput" type="text" class="bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-1 w-full focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+    </div>
+    <div class="mt-1">
+        <div class="grid grid-cols-5">
+            <div class="mr-2 flex flex-row items-end">
+                <h3 class="font-medium">Date</h3>
+                <div class="ml-3 cursor-pointer" @onclick="() => SwitchDateSort()">
+                    <img style="margin-bottom: 3px; @(SortDateType == SortDateTypeEnum.Desc ? "" : "transform: rotate(180deg);")" src="/icons/arrow.png"/>
+                </div>
+            </div>
+            <div class="mr-2">
+                <h3 class="font-medium">Startup</h3>
+            </div>
+            <div class="mr-2">
+                <h3 class="font-medium">Event</h3>
+            </div>
+            <div class="col-span-2">
+                <h3 class="font-medium">Description</h3>
+            </div>
+        </div>
+        <div class="max-h-[350px] mt-1 overflow-y-auto">
+            @if(orderedStartupContents != null)
+            {
+                foreach (var content in orderedStartupContents)
+                {
+                    <div @onclick="() => OpenDetailModal(content)" class="grid grid-cols-5 border-b border-gray-600 hover:bg-grey-200 cursor-pointer">
+                        <div class="mr-2">
+                            <h3 class="">@content.Date.ToShortDateString()</h3>
+                        </div>
+                        <div class="mr-2">
+                            <h3 class="ml-[4px]">@content.Startup</h3>
+                        </div>
+                        <div class="mr-2">
+                            <h3 class="ml-[4px]">@content.Type @GetEmojiForType(content.Type)</h3>
+                        </div>
+                        <div class="col-span-2 flex flex-row">
+                            <h3 class="ml-[8px]">@(content.Description.Length > 16 ? $"{new string(content.Description.Take(30).ToArray())} ...." : $"{content.Description}")</h3>
+                        </div>
+                    </div>          
+                }
+            }
+        </div>    
+    </div>
+</div>
+
+@code {
+    private List<StartupContentDTO> startupContentDTOs;
+    private List<StartupContentDTO> orderedStartupContents;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        startupContentDTOs = await httpClientService.GetFromAPIAsync<List<StartupContentDTO>>("/contentfeeds");
+        orderedStartupContents = startupContentDTOs.OrderByDescending(s => s.Date).ToList();
+    }
+
+    private IModalReference modalReference;
+
+    private void OpenDetailModal(StartupContentDTO startupContentDTO)
+    {
+        var modelParameters = new ModalParameters
+        {
+            { nameof(StartupEventDetailModal.CancelRequestedCallback), new EventCallback(this, () => modalReference.Close()) },
+            { nameof(StartupEventDetailModal.Content), startupContentDTO },
+        };
+
+        modalReference = modalService.Show<StartupEventDetailModal>(string.Empty, modelParameters, DefaultModalOptions.Modal);
+    }
+
+    private string searchWord;
+    public string SearchWord
+    {
+        get { return searchWord; }
+        set 
+        { 
+            searchWord = value; 
+            if (searchWord == string.Empty)
+            {
+                if (SortDateType == SortDateTypeEnum.Desc)
+                {
+                    orderedStartupContents = startupContentDTOs.OrderByDescending(s => s.Date).ToList();
+                }
+                else
+                {
+                    orderedStartupContents = startupContentDTOs;
+                }
+            }
+            else
+            {
+                if (SortDateType == SortDateTypeEnum.Desc)
+                {
+                    orderedStartupContents = startupContentDTOs.OrderByDescending(s => s.Date).Where(s => s.ToString().ToLower().Contains(searchWord.ToLower())).ToList();
+                }
+                else
+                {
+                    orderedStartupContents = startupContentDTOs.Where(s => s.ToString().ToLower().Contains(searchWord.ToLower())).ToList();
+                }
+            }
+
+            StateHasChanged();
+        }
+    }
+
+    private void SwitchDateSort()
+    {
+        SortDateType = SortDateType == SortDateTypeEnum.Desc ? SortDateTypeEnum.Asc : SortDateTypeEnum.Desc;
+    }
+
+    private SortDateTypeEnum sortDateType;
+    public SortDateTypeEnum SortDateType
+    {
+        get { return sortDateType; }
+        set 
+        { 
+            sortDateType = value; 
+            if (sortDateType == SortDateTypeEnum.Desc)
+            {
+                orderedStartupContents = startupContentDTOs.OrderByDescending(s => s.Date).ToList();
+            }
+            else
+            {
+                orderedStartupContents = startupContentDTOs.OrderBy(s => s.Date).ToList();
+            }
+
+            StateHasChanged();
+        }
+    }
+
+    private string GetEmojiForType(NewsType type)
+    {
+        return type switch
+        {
+            NewsType.Team => "🙋",
+            NewsType.Funding => "💸",
+            NewsType.ESG => "🌱",
+            NewsType.Achievement => "🏆",
+        };
+    }
+
+    public enum SortDateTypeEnum
+    {
+        Desc,
+        Asc
+    }
+
+}

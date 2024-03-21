@@ -77,7 +77,7 @@
             </div>
         </div>
         <div class="h-full w-full">
-
+            <StartupKnowledgeBase />
         </div>
         <div class="h-full w-full">
             <h2 class="text-xl font-normal mt-5">Stay connected</h2>
@@ -85,7 +85,7 @@
             <input value="@mobileNumber" @onchange="async args => await UpdatePhoneNumberasync(args)" type="text" class="mb-2 bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
 
             <label class="mb-1.5 block text-sm text-gray-900 dark:text-white">If you have a newsletter, please add this email to your subscriber list. This allows us to automatically read the emails contents and add them to our startup knowledge database.</label>
-            <input readonly style="width: 330px;" @bind-value="startup.Description" @bind-value:event="oninput" type="url" class="mb-2 w-[240px] bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
+            <input readonly style="width: 330px;" value="fellowfinderinbox@gmail.com" type="url" class="mb-2 w-[240px] bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
         </div>
     </div>
 </div>

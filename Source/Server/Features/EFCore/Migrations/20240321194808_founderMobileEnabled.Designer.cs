@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Server.Features.EFCore;
 
@@ -11,9 +12,11 @@ using Server.Features.EFCore;
 namespace Server.Features.EFCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240321194808_founderMobileEnabled")]
+    partial class founderMobileEnabled
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -230,19 +233,7 @@ namespace Server.Features.EFCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Domain")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Startup")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Type")
@@ -275,7 +266,7 @@ namespace Server.Features.EFCore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8584baa2-7afd-4008-aa92-b923cbd6c451"),
+                            Id = new Guid("b2054598-3533-45d7-86a4-05e69560c015"),
                             Email = "test.founder@fellowship.com",
                             MobileEnabled = false,
                             MobileNumber = "1234567"
@@ -316,7 +307,7 @@ namespace Server.Features.EFCore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1bbd959b-659f-49f9-8acc-b37bba1b8b65"),
+                            Id = new Guid("1549bff0-1f1b-4d05-9266-50f266ff6075"),
                             Batch = "2024",
                             Description = "SaaS for cleaning companies",
                             Discipline = "SaaS",

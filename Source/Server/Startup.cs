@@ -21,6 +21,7 @@ using Server.Features;
 using Server.Features.UserIdentity.Domain;
 using Server.Features.EFCore;
 using Server.Hubs;
+using Server.Features.WhatsAppMessaging;
 
 namespace Server
 {
@@ -44,6 +45,7 @@ namespace Server
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Server", Version = "v1" });
             });
 
+            services.AddScoped<TwilioWhatsAppService>();
             services.AddScoped<EmailSender>();
             services.AddSingleton<InvitationCodesCollection>();
 

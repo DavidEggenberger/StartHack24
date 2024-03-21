@@ -6,6 +6,7 @@ using Server.Features.EFCore;
 using Server.Features.Startups.Domain;
 using Server.Hubs;
 using Shared.Startup;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -101,6 +102,19 @@ namespace Server.Features.Startups
             applicationDbContext.Startups.ExecuteDelete();
 
             await applicationDbContext.SaveChangesAsync();
+        }
+
+        [HttpGet("founderNumber/{startupId}")]
+        public async Task<string> GetMobilePhoneOfFounder([FromRoute] Guid startupId)
+        {
+            var startup = await applicationDbContext.Startups.FirstAsync(s => s.Id == startupId);
+
+            var email = startup.FounderEmail;
+
+            var founder = await applicationDbContext.Founders.FirstAsync(f => f.Email == email);
+
+            return founder.MobileNumber;
+
         }
     }
 }

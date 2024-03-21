@@ -11,6 +11,6 @@ namespace Shared.ContentFeed
         Funding,
         Team,
         ESG,
-        PersonalAchievements
+        Achievement
     }
 }

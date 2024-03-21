@@ -1,0 +1,56 @@
+﻿@using Client.BuildingBlocks.Http
+@using Shared.ContentFeed
+@inject HttpClientService httpClientService
+@inject NavigationManager navigationManager
+
+<div style="width: 300px;" class="w-[300px]">
+    <h2 class="text-xl font-normal text-orange">@Content.Startup @GetEmojiForType(Content.Type)</h2>
+    <div class="w-full grid justify-start mt-3">
+        <div class="w-[340px] grid content-center w-full">
+            <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">@Content.Date.ToShortDateString()</label>
+
+            <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">@Content.Description</label>
+        </div>
+    </div>
+
+    <div class="flex flex-rwo gap-x-3 justify-end">
+        <a href="@($"https://wa.me/41793454087")" target="_blank" class="justify-self-end mt-3 w-[135px] text-md text-white bg-orange hover:bg-white hover:text-orange hover:border-orange border border-1 border-black cursor-pointer p-1 rounded">
+            <span>Reply on Whatsapp</span>
+        </a>
+
+        <button @onclick="async () => await CancelRequestedAsync()" class="h-[30px] px-2 mt-3 font-semibold rounded-[3px] text-md bg-grey-200 hover:bg-grey-300">
+            <span>Cancel</span>
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public StartupContentDTO Content { get; set; }
+
+    [Parameter]
+    public EventCallback CancelRequestedCallback { get; set; }
+    public async Task CancelRequestedAsync()
+    {
+        if (CancelRequestedCallback.HasDelegate)
+        {
+            await CancelRequestedCallback.InvokeAsync(this);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await httpClientService.GetFromAPIAsync<string>($"/startups/founderNumber/{Content.StartupId}");
+    }
+
+    private string GetEmojiForType(NewsType type)
+    {
+        return type switch
+        {
+            NewsType.Team => "🙋",
+            NewsType.Funding => "💸",
+            NewsType.ESG => "🌱",
+            NewsType.Achievement => "🏆",
+        };
+    }
+}

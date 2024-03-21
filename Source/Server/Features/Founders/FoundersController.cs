@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Features.EFCore;
 using Server.Features.Startups.Domain;
+using Server.Features.WhatsAppMessaging;
 using Shared.Founders;
 using Shared.Startup;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -18,11 +20,13 @@ namespace Server.Features.Founders
     {
         private ApplicationDbContext applicationDbContext;
         private InvitationCodesCollection invitationCodesCollection;
+        private TwilioWhatsAppService TwilioWhatsAppService;
 
-        public FoundersController(InvitationCodesCollection invitationCodesCollection, ApplicationDbContext applicationDbContext)
+        public FoundersController(InvitationCodesCollection invitationCodesCollection, TwilioWhatsAppService TwilioWhatsAppService, ApplicationDbContext applicationDbContext)
         {
             this.invitationCodesCollection = invitationCodesCollection;
             this.applicationDbContext = applicationDbContext;
+            this.TwilioWhatsAppService = TwilioWhatsAppService;
         }
 
         [HttpGet("count")]
@@ -104,6 +108,17 @@ namespace Server.Features.Founders
                 .FirstAsync();
 
             founder.MobileNumber = number;
+
+            try
+            {
+                TwilioWhatsAppService.SendMessage("Thanks for registrating with your phone number on FellowshipFinder!", founder.MobileNumber);
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+
+            founder.MobileEnabled = true;
 
             await applicationDbContext.SaveChangesAsync();
 
