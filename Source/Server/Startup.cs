@@ -19,6 +19,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Server.Features;
 using Server.Features.UserIdentity.Domain;
+using Server.Features.EFCore;
+using Server.Hubs;
 
 namespace Server
 {
@@ -34,6 +36,7 @@ namespace Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSignalR();
             services.AddRazorPages();
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -130,6 +133,7 @@ namespace Server
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
+                endpoints.MapHub<NotificationHub>("NotificationHub");
                 endpoints.MapFallbackToPage("/_Host");
             });
         }

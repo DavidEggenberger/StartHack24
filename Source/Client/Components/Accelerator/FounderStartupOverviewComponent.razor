@@ -1,4 +1,5 @@
 ﻿@using Client.BuildingBlocks.Http
+@using Microsoft.AspNetCore.SignalR.Client
 @using Shared
 @using Shared.Founders
 @using Shared.Startup
@@ -7,7 +8,7 @@
 <div class="h-full w-full p-2 pt-3">
     <div class="pb-2 border-b border-b-black">
         <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Search for startups/founders</label>
-        <input type="text" class="bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
+        <input @bind-value="SearchWord" @bind-value:event="oninput" type="text" class="bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
 
         <div class="flex flex-row mt-2 gap-x-3">
             <div class="flex-1">
@@ -32,12 +33,12 @@
         </div>
     </div>
 
-    <div class="mt-4 h-[calc(100%-145px)] overflow-y-auto">
-        @if (sortedBases != null && sortedBases.Any())
+    <div class="mt-4 max-h-[320px] overflow-y-auto">
+        @if (startupsFiltered != null && startupsFiltered.Any())
         {
-            foreach (var startup in sortedBases)
+            foreach (var startup in startupsFiltered)
             {
-                <div class="border border-black p-1 rounded mb-2">
+                <div class="border border-black p-1 rounded mb-2 mr-1">
                     @startup.Name
                 </div>
             }   
@@ -49,20 +50,38 @@
 
 @code {
     List<StartupDTO> startups;
-    List<FounderDTO> founders;
-    List<FounderStartupBaseDTO> bases;
-    List<FounderStartupBaseDTO> sortedBases => bases;
+    List<StartupDTO> startupsFiltered;
+
+    [CascadingParameter]
+    public HubConnection HubConnection { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         startups = await httpClientService.GetFromAPIAsync<List<StartupDTO>>("/startups");
-        founders = await httpClientService.GetFromAPIAsync<List<FounderDTO>>("/founders");
 
         var founderStartups = startups.Select(s => new FounderStartupBaseDTO { Founder = false, Name = s.Name, Country = s.Country }).ToList();
-        founderStartups.AddRange(founders.Select(s => new FounderStartupBaseDTO { Founder = true, Name = s.Name, Country = s.Country }));
 
-        bases = founderStartups.OrderBy(s => new Random().Next(0, 100)).ToList();
+        startupsFiltered = startups;
+
+        HubConnection.On("StartupChange", async () =>
+        {
+            startups = await httpClientService.GetFromAPIAsync<List<StartupDTO>>("/startups");
+
+            StateHasChanged();
+        });
     }
 
+    private string searchWord;
 
+    public string SearchWord
+    {
+        get { return searchWord; }
+        set 
+        { 
+            searchWord = value;
+            startupsFiltered = startups.Where(s => s.ToString().ToLower().Contains(searchWord.ToLower())).ToList();
+            StateHasChanged();
+        }
+    }
+    
 }

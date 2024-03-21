@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Server.Features
 {
@@ -15,6 +16,11 @@ namespace Server.Features
         public void AddInvitationCode(Guid invitationCode)
         {
             invitationCodes.Add(invitationCode);
+        }
+
+        public bool CheckIfValidCode(string code)
+        {
+            return invitationCodes.Any(x => x.ToString() == code);
         }
     }
 }

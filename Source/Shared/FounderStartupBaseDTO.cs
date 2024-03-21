@@ -10,6 +10,7 @@ namespace Shared
     {
         public string Name { get; set; }
         public string Country { get; set; }
+        public string Location { get; set; }
         public bool Founder { get; set; }
     }
 }

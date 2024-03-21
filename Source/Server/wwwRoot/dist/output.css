@@ -592,12 +592,20 @@ video {
   margin-top: 1rem;
 }
 
+.mt-5 {
+  margin-top: 1.25rem;
+}
+
 .mt-8 {
   margin-top: 2rem;
 }
 
 .mt-\[-40px\] {
   margin-top: -40px;
+}
+
+.mt-\[-80px\] {
+  margin-top: -80px;
 }
 
 .mt-\[10px\] {
@@ -608,20 +616,12 @@ video {
   margin-top: 15px;
 }
 
-.mb-\[-50px\] {
-  margin-bottom: -50px;
+.mr-2 {
+  margin-right: 0.5rem;
 }
 
-.mt-5 {
-  margin-top: 1.25rem;
-}
-
-.mb-\[-80px\] {
-  margin-bottom: -80px;
-}
-
-.mt-\[-80px\] {
-  margin-top: -80px;
+.mr-1 {
+  margin-right: 0.25rem;
 }
 
 .block {
@@ -636,16 +636,16 @@ video {
   display: grid;
 }
 
+.h-\[30px\] {
+  height: 30px;
+}
+
 .h-\[41px\] {
   height: 41px;
 }
 
 .h-\[65px\] {
   height: 65px;
-}
-
-.h-\[calc\(100\%-145px\)\] {
-  height: calc(100% - 145px);
 }
 
 .h-\[calc\(100\%-65px\)\] {
@@ -664,6 +664,26 @@ video {
   max-height: 900px;
 }
 
+.max-h-\[calc\(100\%-145px\)\] {
+  max-height: calc(100% - 145px);
+}
+
+.max-h-\[calc\(100\%-175px\)\] {
+  max-height: calc(100% - 175px);
+}
+
+.max-h-\[350px\] {
+  max-height: 350px;
+}
+
+.max-h-\[330px\] {
+  max-height: 330px;
+}
+
+.max-h-\[320px\] {
+  max-height: 320px;
+}
+
 .w-\[190px\] {
   width: 190px;
 }
@@ -676,6 +696,10 @@ video {
   width: 260px;
 }
 
+.w-\[340px\] {
+  width: 340px;
+}
+
 .w-\[34px\] {
   width: 34px;
 }
@@ -684,24 +708,16 @@ video {
   width: 350px;
 }
 
+.w-\[75px\] {
+  width: 75px;
+}
+
 .w-full {
   width: 100%;
 }
 
 .w-screen {
   width: 100vw;
-}
-
-.w-\[300px\] {
-  width: 300px;
-}
-
-.w-\[340px\] {
-  width: 340px;
-}
-
-.w-\[75px\] {
-  width: 75px;
 }
 
 .max-w-\[1400px\] {
@@ -720,8 +736,8 @@ video {
   grid-template-columns: 1fr 2fr 1fr;
 }
 
-.grid-rows-\[1fr_150px\] {
-  grid-template-rows: 1fr 150px;
+.grid-rows-\[1fr_180px\] {
+  grid-template-rows: 1fr 180px;
 }
 
 .grid-rows-\[90px_2fr\] {
@@ -818,6 +834,10 @@ video {
 
 .self-end {
   align-self: flex-end;
+}
+
+.justify-self-end {
+  justify-self: end;
 }
 
 .overflow-y-auto {
@@ -918,6 +938,11 @@ video {
 
 .p-\[5px\] {
   padding: 5px;
+}
+
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .pb-0 {
@@ -1023,6 +1048,11 @@ video {
 
 .hover\:text-orange:hover {
   color: rgba(255, 97, 0, 1);
+}
+
+.hover\:text-white:hover {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
 @media (prefers-color-scheme: dark) {

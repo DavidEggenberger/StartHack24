@@ -1,0 +1,78 @@
+﻿@using Client.BuildingBlocks.Http
+@using Shared.Startup
+@inject HttpClientService httpClientService
+
+<div class="w-full h-full text-black grid content-center">
+    <div class="">
+        <h3 class="text-2xl text-center text-orange">Create a new startup</h3>
+
+        <div class="w-full grid justify-center mt-3">
+            <div class="w-[340px] grid content-center w-full">
+                <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Name</label>
+                <input @bind-value="startup.Name" @bind-value:event="oninput" type="text" class="mb-2 bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
+
+                <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Website</label>
+                <input @bind-value="startup.URI" @bind-value:event="oninput" type="url" class="mb-2 bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
+
+                <div class="flex flex-row gap-x-3">
+                    <div class="flex-1">
+                        <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Location</label>
+                        <select @bind-value="startup.Location" @bind-value:event="oninput" class="bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500">
+                            <option>Argentina</option>
+                            <option>Brasil</option>
+                            <option>Ecuador</option>
+                        </select>
+                    </div>
+                    <div class="flex-1">
+                        <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Industry</label>
+                        <select @bind-value="startup.Discipline" @bind-value:event="oninput" class="bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500">
+                            <option>SaaS</option>
+                            <option>Healthcare</option>
+                            <option>Deeptech</option>
+                            <option>Fintech</option>
+                            <option>Legaltech</option>
+                        </select>
+                    </div>
+                </div>        
+
+                <div class="flex flex-rwo gap-x-3 justify-end">
+                    <button @onclick='async () => await CreateStartupAsync()' class="justify-self-end mt-3 w-[75px] text-md text-white bg-orange hover:bg-white hover:text-orange hover:border-orange border border-1 border-black cursor-pointer p-1 rounded">
+                        <span>Create</span>
+                    </button>
+
+                    <button @onclick="async () => await CancelRequestedAsync()" class="h-[30px] px-2 mt-3 font-semibold rounded-[3px] text-md bg-grey-200 hover:bg-grey-300">
+                        <span>Cancel</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback CancelRequestedCallback { get; set; }
+
+    private bool switchToSignUp;
+
+    public async Task CancelRequestedAsync()
+    {
+        if (CancelRequestedCallback.HasDelegate)
+        {
+            await CancelRequestedCallback.InvokeAsync(this);
+        }
+    }
+
+    StartupDTO startup;
+
+    protected override async Task OnInitializedAsync()
+    {
+        startup = new StartupDTO();
+    }
+
+    public async Task CreateStartupAsync()
+    {
+        await httpClientService.PostToAPIAsync("/startups", startup);
+        await CancelRequestedCallback.InvokeAsync(this);
+    }
+}

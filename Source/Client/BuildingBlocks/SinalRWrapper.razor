@@ -1,0 +1,24 @@
+﻿@inject NavigationManager navigationManager
+@using Microsoft.AspNetCore.SignalR.Client
+
+<CascadingValue Value="HubConnection">
+    @if (HubConnection != null)
+    {
+        @ChildContent
+    }
+</CascadingValue>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    private HubConnection HubConnection;
+
+    protected override async Task OnInitializedAsync()
+    {
+        HubConnection = new HubConnectionBuilder()
+            .WithUrl(navigationManager.ToAbsoluteUri("NotificationHub"))
+            .Build();
+        await HubConnection.StartAsync();
+    }
+}

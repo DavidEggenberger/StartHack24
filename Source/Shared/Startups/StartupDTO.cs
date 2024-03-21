@@ -8,9 +8,13 @@ namespace Shared.Startup
 {
     public class StartupDTO : FounderStartupBaseDTO
     {
-        public string Name { get; set; }
+        public string FounderName { get; set; }
         public string URI { get; set; }
-        public string Location { get; set; }
-        public DisciplineDTO Discipline { get; set; }
+        public string Discipline { get; set; }
+
+        public override string ToString()
+        {
+            return FounderName + URI + Discipline;
+        }
     }
 }
