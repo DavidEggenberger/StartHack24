@@ -43,7 +43,7 @@ namespace Server.Features.UserIdentity
                 var identity = new ClaimsIdentity(new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, "Accelerator Test Admin"),
-                    new Claim(ClaimTypes.Role, "Accelerator")
+                    new Claim(ClaimTypes.Role, "Accelerator"),
                     
                 }, IdentityConstants.ApplicationScheme);
 
@@ -57,7 +57,8 @@ namespace Server.Features.UserIdentity
                 var identity = new ClaimsIdentity(new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, "Founder Test"),
-                    new Claim(ClaimTypes.Role, "Founder")
+                    new Claim(ClaimTypes.Role, "Founder"),
+                    new Claim(ClaimTypes.Email, "test.founder@fellowship.com")
 
                 }, IdentityConstants.ApplicationScheme);
 
@@ -98,7 +99,7 @@ namespace Server.Features.UserIdentity
         public async Task InviteUser([FromBody] InviteUserDTO inviteUserDTO)
         {
             var invitationCode = Guid.NewGuid();
-            invitationCodesCollection.AddInvitationCode(invitationCode);
+            invitationCodesCollection.AddInvitationCode(inviteUserDTO.Email, invitationCode);
 
             var message = $@"
                 <h3>You are invited as a {inviteUserDTO.Type} to Fellowship Finder</h3>

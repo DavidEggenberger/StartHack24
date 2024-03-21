@@ -1,11 +1,17 @@
 ﻿@page "/"
+@inject IModalService modalService
 
 <AuthorizeView>
     <NotAuthorized>
         <div class="h-full grid place-content-center">
             <div class="mt-[-40px] text-center">
-                <h2 class="text-3xl">Welcome to the Start Fellowship web app!</h2>
-                <h3 class="text-xl">Startup Founders can keep in contact with the Admins of the Accelerator programm</h3>
+                <h2 class="text-4xl">Welcome to the Start Fellowship web app!</h2>
+                <h3 class="text-2xl mt-2">Startup Founders can keep in contact with the Admins of the Accelerator programm</h3>
+                <div>
+                    <button @onclick=' () => OpenOurStartupsModal()' class="w-[195px] justify-self-end mt-3 w-[75px] text-xl text-white bg-orange hover:bg-white hover:text-orange hover:border-orange border border-1 border-black cursor-pointer p-1 rounded">
+                        <span>Explore our Startups</span>
+                    </button>
+                </div>             
             </div>
         </div>
     </NotAuthorized>
@@ -20,3 +26,17 @@
         <AcceleratorDashboardComponent />
     </div>
 </AuthorizeView>
+
+@code{
+    private IModalReference modalReference;
+
+    public void OpenOurStartupsModal()
+    {
+        var modelParameters = new ModalParameters
+        {
+            { nameof(StartupOverviewModal.CancelRequestedCallback), new EventCallback(this, () => modalReference.Close()) },
+        };
+
+        modalReference = modalService.Show<StartupOverviewModal>(string.Empty, modelParameters, DefaultModalOptions.Modal);
+    }
+}

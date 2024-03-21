@@ -1,7 +1,109 @@
-﻿<div class="h-full w-full">
+﻿@using Client.BuildingBlocks.Http
+@using Microsoft.AspNetCore.SignalR.Client
+@using Shared.Startup
+@inject HttpClientService httpClientService
 
+<div class="h-full w-full grid grid-rows-[90px_2fr] gap-y-6">
+    <div class="mt-3 flex flex-row gap-x-3 justify-between">
+        <div class="mt-1 self-end">
+            <h3 class="text-2xl">Your Founder Dashboard</h3>
+            <h5 class="text-lg">Stay connected with fellow founders, investors and the incubator team</h5>
+        </div>
+        <div class="flex flex-row ml-5 gap-x-3">
+            <div class="w-[190px] rounded rounded-b-none border-orange border-b-[6px] bg-grey-200 p-1 flex flex-row">
+                <div class="self-end">
+                    <h3 class="text-xl font-medium">@fellowCount</h3>
+                    <h3>Supported Fellows</h3>
+                </div>
+            </div>
+            <div class="w-[190px] rounded rounded-b-none border-orange border-b-[6px] bg-grey-200 p-1 flex flex-row">
+                <div class="self-end">
+                    <h3 class="text-xl font-medium">22.1 Million</h3>
+                    <h3>Funding for fellows</h3>
+                </div>
+            </div>
+            <div class="w-[190px] rounded rounded-b-none border-orange border-b-[6px] bg-grey-200 p-1 flex flex-row">
+                <div class="self-end">
+                    <h3 class="text-xl font-medium">@startupCount</h3>
+                    <h3>Tracked startups</h3>
+                </div>
+            </div>
+            <div class="w-[34px] rounded rounded-b-none rounded-r-none border-orange border-b-[6px] bg-grey-200 grid justify-center content-end	">
+                <img class="mb-2 cursor-pointer" src="/icons/settings.png" />
+            </div>
+        </div>
+    </div>
+    <div class="grid grid-cols-[1fr_2fr] gap-x-4 mb-3">
+        <div class="w-full h-full">
+            <h2 class="text-xl font-normal">Update your Start-up</h2>
+            <div class="w-full grid justify-start mt-3">
+            <div class="w-[340px] grid content-center w-full">
+                <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Name</label>
+                <input @bind-value="startup.Name" @bind-value:event="oninput" type="text" class="mb-2 bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
+
+                <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Website</label>
+                <input @bind-value="startup.URI" @bind-value:event="oninput" type="url" class="mb-2 bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
+
+                <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Short description</label>
+                <input style="width: 360px;" @bind-value="startup.Description" @bind-value:event="oninput" type="url" class="mb-2 w-[240px] bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
+
+                <div class="flex flex-row gap-x-3">
+                    <div class="flex-1">
+                        <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Location</label>
+                        <select @bind-value="startup.Location" @bind-value:event="oninput" class="bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500">
+                            <option>Argentina</option>
+                            <option>Brazil</option>
+                            <option>Ecuador</option>
+                        </select>
+                    </div>
+                    <div class="flex-1">
+                        <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Industry</label>
+                        <select @bind-value="startup.Discipline" @bind-value:event="oninput" class="bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500">
+                            <option>SaaS</option>
+                            <option>Healthcare</option>
+                            <option>Deeptech</option>
+                            <option>Fintech</option>
+                            <option>Legaltech</option>
+                        </select>
+                    </div>
+                </div>        
+
+                <div class="flex flex-rwo gap-x-3 justify-end">
+                    <button @onclick='async () => await UpdateStartupAsync()' class="justify-self-end mt-3 w-[75px] text-md text-white bg-orange hover:bg-white hover:text-orange hover:border-orange border border-1 border-black cursor-pointer p-1 rounded">
+                        <span>Update</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
 </div>
 
 @code {
+    private int fellowCount;
+    private int startupCount;
 
+    private StartupDTO startup;
+
+    [CascadingParameter]
+    public HubConnection HubConnection { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        fellowCount = await httpClientService.GetFromAPIAsync<int>("/founders/count");
+        startupCount = await httpClientService.GetFromAPIAsync<int>("/startups/count");
+
+        HubConnection.On("/NewStartup", async () =>
+        {
+            startupCount = await httpClientService.GetFromAPIAsync<int>("/startups/count");
+            StateHasChanged();
+        });
+
+        startup = await httpClientService.GetFromAPIAsync<StartupDTO>("/founders/startup");
+    }
+
+    private async Task UpdateStartupAsync()
+    {
+        await httpClientService.PostToAPIAsync("/startups/update", startup);
+    }
 }

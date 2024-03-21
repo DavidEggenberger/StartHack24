@@ -7,6 +7,7 @@ using Shared.Founders;
 using Shared.Startup;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Server.Features.Founders
@@ -36,6 +37,27 @@ namespace Server.Features.Founders
             return new List<FounderDTO> { new FounderDTO() { Name = "Sassy",  } };
         }
 
+        [HttpGet("startup")]
+        public async Task<ActionResult<StartupDTO>> GetStartupForFounderAsync()
+        {
+            var email = User.Claims.First(c => c.Type == ClaimTypes.Email).Value;
+
+            var startup = await applicationDbContext.Startups
+                .Where(s => s.FounderEmail == email)
+                .FirstAsync();
+
+            return new StartupDTO
+            {
+                Description = startup.Description,
+                Discipline = startup.Discipline,
+                Batch = startup.Batch,
+                Location = startup.Location,
+                Name = startup.Name,
+                URI = startup.URI,
+                Id = startup.Id,
+            };
+        }
+
         [HttpPost("{code}")]
         public async Task<ActionResult<StartupDTO>> CreateFounderWithStartup([FromRoute] string code, StartupDTO startup)
         {
@@ -44,11 +66,14 @@ namespace Server.Features.Founders
                 return Unauthorized();
             }
 
+            var founderEmail = invitationCodesCollection.invitationCodes.FirstOrDefault(s => s.Item2.ToString() == code);
+
             var newStartUP = new StartUp
             {
                 Name = startup.Name,
                 URI = startup.URI,
                 Location = startup.Location,
+                FounderEmail = founderEmail.Item1
             };
 
             applicationDbContext.Startups.Add(newStartUP);

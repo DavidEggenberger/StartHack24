@@ -11,5 +11,6 @@ namespace Server.Features.Startups.Domain
         public string Discipline { get; set; }
         public string Description { get; set; }
         public string Batch { get; set; }
+        public string FounderEmail { get; set; }
     }
 }

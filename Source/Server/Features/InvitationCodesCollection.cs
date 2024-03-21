@@ -6,21 +6,21 @@ namespace Server.Features
 {
     public class InvitationCodesCollection
     {
-        public List<Guid> invitationCodes;
+        public List<(string, Guid)> invitationCodes;
 
         public InvitationCodesCollection()
         {
-            invitationCodes = new List<Guid>();
+            invitationCodes = new List<(string, Guid)>();
         }
 
-        public void AddInvitationCode(Guid invitationCode)
+        public void AddInvitationCode(string email, Guid invitationCode)
         {
-            invitationCodes.Add(invitationCode);
+            invitationCodes.Add((email, invitationCode));
         }
 
         public bool CheckIfValidCode(string code)
         {
-            return invitationCodes.Any(x => x.ToString() == code);
+            return invitationCodes.Any(x => x.Item2.ToString() == code);
         }
     }
 }

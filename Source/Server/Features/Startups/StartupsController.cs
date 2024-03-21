@@ -8,6 +8,7 @@ using Server.Hubs;
 using Shared.Startup;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Server.Features.Startups
@@ -35,7 +36,8 @@ namespace Server.Features.Startups
                 Discipline = s.Discipline,
                 Name = s.Name,
                 Description = s.Description,
-                Batch = s.Batch
+                Batch = s.Batch,
+                Id = s.Id,
             }).ToList();
         }
 
@@ -65,6 +67,32 @@ namespace Server.Features.Startups
             await hubContext.Clients.All.SendAsync("StartupChange");
 
             return Ok();
+        }
+
+        [HttpPost("Update")]
+        public async Task<ActionResult> UpdateStartupAsync(StartupDTO startupDTO)
+        {
+            var startup = await applicationDbContext.Startups.FirstOrDefaultAsync(s => s.Id == startupDTO.Id);
+
+            var email = User.Claims.First(c => c.Type == ClaimTypes.Email).Value;
+
+            if (startup.FounderEmail != email)
+            {
+                return Unauthorized();
+            }
+
+            startup.URI = startupDTO.URI;
+            startup.Name = startupDTO.Name;
+            startup.Discipline = startupDTO.Discipline;
+            startup.Description = startupDTO.Description;
+            startup.Batch = startupDTO.Batch;
+            startup.Location = startupDTO.Location;
+            startup.URI = startup.URI;
+
+            await applicationDbContext.SaveChangesAsync();
+
+            return Ok();
+
         }
 
         [HttpDelete]

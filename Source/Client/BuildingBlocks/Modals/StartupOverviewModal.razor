@@ -1,0 +1,205 @@
+﻿@using Client.BuildingBlocks.Http
+@using Microsoft.AspNetCore.SignalR.Client
+@using Shared
+@using Shared.Founders
+@using Shared.Startup
+@inject HttpClientService httpClientService
+@inject IModalService modalService
+@inject NavigationManager navigationManager
+
+<div class="h-full w-[380px] p-2 pt-3">
+    <div class="pb-2 border-b border-b-orange">
+
+        <h3 class="text-orange text-center text-2xl">Overview over all our incubated startups</h3>
+
+        <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Keyword search</label>
+        <input @bind-value="SearchWord" @bind-value:event="oninput" type="text" class="bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
+
+        <div class="flex flex-row mt-2 gap-x-3">
+            <div class="flex-1">
+                <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Filter by country</label>
+                <select @bind-value="Location" @bind-value:event="oninput" class="bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500">
+                    <option>All</option>
+                    <option>Argentina</option>
+                    <option>Brasil</option>
+                    <option>Ecuador</option>
+                </select>
+            </div>
+            <div class="flex-1">
+                <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Filter by batch</label>
+                <select @bind-value="Batch" @bind-value:event="oninput" class="bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500">
+                    <option>All</option>
+                    <option>2021</option>
+                    <option>2022</option>
+                    <option>2023</option>
+                    <option>2024</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 h-[320px] max-h-[320px] overflow-y-auto">
+        @if (startupsFiltered != null && startupsFiltered.Any())
+        {
+            foreach (var startup in startupsFiltered)
+            {
+                <div class="flex flex-col gap-y-0.5 bg-grey-50 hover:bg-grey-100 p-1 rounded mb-2 mr-1 h-[60px] cursor-pointer">
+                    <div class="flex flex-row justify-between">
+                        <h4 class="font-medium">@startup.Name</h4>
+
+                        <div class="flex flex-row gap-x-2">
+                            <div class="rounded-2 text-orange bg:orange text-sm p-1">
+                                @startup.Batch
+                            </div>
+                            <div class="rounded-2 text-orange bg:orange text-sm p-1">
+                                @startup.Discipline
+                            </div>
+                        </div>
+
+                    </div>
+                    <div>
+                        <h5>@startup.Description</h5>
+                    </div>
+                </div>      
+            }   
+        }
+    </div>
+
+    <div class="flex flex-row justify-end mt-4">
+        <button @onclick="async () => await CancelRequestedAsync()" class="font-semibold rounded-[3px] p-[5px] text-[18px] bg-grey-200 hover:bg-grey-300">Close</button>
+    </div>
+
+</div>
+
+
+@code {
+    List<StartupDTO> startups;
+    List<StartupDTO> startupsFiltered;
+
+    [CascadingParameter]
+    public HubConnection HubConnection { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        startups = await httpClientService.GetFromAPIAsync<List<StartupDTO>>("/startups");
+
+        startupsFiltered = startups;
+
+        if (HubConnection == null)
+        {
+            HubConnection = new HubConnectionBuilder()
+            .WithUrl(navigationManager.ToAbsoluteUri("NotificationHub"))
+            .Build();
+            await HubConnection.StartAsync();
+        }
+
+        HubConnection.On("StartupChange", async () =>
+        {
+            startups = await httpClientService.GetFromAPIAsync<List<StartupDTO>>("/startups");
+
+            startupsFiltered = startups;
+
+            StateHasChanged();
+        });
+    }
+
+    public async Task OpenStartupDetailModal()
+    {
+        
+    }
+
+    Func<StartupDTO, bool> locationFilter = s => true;
+    Func<StartupDTO, bool> searchWordFilter = s => true;
+    Func<StartupDTO, bool> batchFilter = s => true;
+
+    private string searchWord;
+
+    public string SearchWord
+    {
+        get { return searchWord; }
+        set 
+        { 
+            searchWord = value;
+            if (SearchWord != string.Empty)
+            {
+                searchWordFilter = startup =>
+                {
+                    return startup.ToString().ToLower().Contains(searchWord.ToLower());
+                };
+            }
+            else
+            {
+                searchWordFilter = s => true;
+            }
+
+            startupsFiltered = startups.Where(locationFilter).Where(searchWordFilter).Where(batchFilter).ToList();
+
+            StateHasChanged();
+        }
+    }
+
+    private string batch;
+
+    public string Batch
+    {
+        get { return batch; }
+        set
+        {
+            batch = value;
+            if (batch != "All")
+            {
+                batchFilter = startup =>
+                {
+                    return startup.Batch == batch;
+                };
+            }
+            else
+            {
+                batchFilter = s => true;
+            }
+
+            startupsFiltered = startups.Where(locationFilter).Where(searchWordFilter).Where(batchFilter).ToList();
+
+            StateHasChanged();
+        }
+    }
+
+    private string location;
+
+    public string Location
+    {
+        get { return batch; }
+        set
+        {
+            location = value;
+            if (location != "All")
+            {
+                locationFilter = startup =>
+                {
+                    return startup.Location == location;
+                };
+            }
+            else
+            {
+                locationFilter = s => true;
+            }
+
+            startupsFiltered = startups.Where(locationFilter).Where(searchWordFilter).Where(batchFilter).ToList();
+
+            StateHasChanged();
+        }
+    }
+
+    [Parameter]
+    public EventCallback CancelRequestedCallback { get; set; }
+
+    private bool switchToSignUp;
+
+    public async Task CancelRequestedAsync()
+    {
+        if (CancelRequestedCallback.HasDelegate)
+        {
+            await CancelRequestedCallback.InvokeAsync(this);
+        }
+    }
+}
