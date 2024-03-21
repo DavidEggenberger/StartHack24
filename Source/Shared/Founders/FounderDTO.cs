@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shared.Startup
+namespace Shared.Founders
 {
-    public class StartupDTO
+    public class FounderDTO : FounderStartupBaseDTO
     {
+        
     }
 }

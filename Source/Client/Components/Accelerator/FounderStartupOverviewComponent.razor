@@ -1,0 +1,68 @@
+﻿@using Client.BuildingBlocks.Http
+@using Shared
+@using Shared.Founders
+@using Shared.Startup
+@inject HttpClientService httpClientService
+
+<div class="h-full w-full p-2 pt-3">
+    <div class="pb-2 border-b border-b-black">
+        <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Search for startups/founders</label>
+        <input type="text" class="bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500" />
+
+        <div class="flex flex-row mt-2 gap-x-3">
+            <div class="flex-1">
+                <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Filter by country</label>
+                <select class="bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500">
+                    <option>All</option>
+                    <option>Argentina</option>
+                    <option>Brasil</option>
+                    <option>Ecuador</option>
+                </select>
+            </div>
+            <div class="flex-1">
+                <label class="mb-1.5 block text-md font-medium text-gray-900 dark:text-white">Filter by batch</label>
+                <select class="bg-grey-50 border border-gray-300 text-gray-900 text-sm rounded text-lg p-[5px] w-full focus:ring-blue-500 focus:border-blue-500">
+                    <option>All batches</option>
+                    <option>2021</option>
+                    <option>2022</option>
+                    <option>2023</option>
+                    <option>2024</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 h-[calc(100%-145px)] overflow-y-auto">
+        @if (sortedBases != null && sortedBases.Any())
+        {
+            foreach (var startup in sortedBases)
+            {
+                <div class="border border-black p-1 rounded mb-2">
+                    @startup.Name
+                </div>
+            }   
+        }
+    </div>
+
+</div>
+
+
+@code {
+    List<StartupDTO> startups;
+    List<FounderDTO> founders;
+    List<FounderStartupBaseDTO> bases;
+    List<FounderStartupBaseDTO> sortedBases => bases;
+
+    protected override async Task OnInitializedAsync()
+    {
+        startups = await httpClientService.GetFromAPIAsync<List<StartupDTO>>("/startups");
+        founders = await httpClientService.GetFromAPIAsync<List<FounderDTO>>("/founders");
+
+        var founderStartups = startups.Select(s => new FounderStartupBaseDTO { Founder = false, Name = s.Name, Country = s.Country }).ToList();
+        founderStartups.AddRange(founders.Select(s => new FounderStartupBaseDTO { Founder = true, Name = s.Name, Country = s.Country }));
+
+        bases = founderStartups.OrderBy(s => new Random().Next(0, 100)).ToList();
+    }
+
+
+}
