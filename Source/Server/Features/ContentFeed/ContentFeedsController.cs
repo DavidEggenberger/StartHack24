@@ -32,6 +32,12 @@ namespace Server.Features.ContentFeed
             }).ToList());
         }
 
+        [HttpGet("count")]
+        public async Task<ActionResult<int>> GetContentsCount()
+        {
+            return Ok(applicationDbContext.StartupContents.Count());
+        }
+
         [HttpPost]
         public async Task<ActionResult<ContentFeedDTO>> CreateContentFeed(ContentFeedDTO contentFeedDTO)
         {

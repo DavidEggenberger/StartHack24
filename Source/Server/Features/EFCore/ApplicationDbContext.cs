@@ -135,6 +135,8 @@ namespace Server.Features.EFCore
                     StartupId = medDentsId
                 });
 
+
+
             builder.Entity<StartupContent>()
                 .HasData(new StartupContent
                 {
@@ -144,7 +146,7 @@ namespace Server.Features.EFCore
                     Type = Shared.ContentFeed.NewsType.ESG,
                     Id = System.Guid.NewGuid(),
                     Title = "Succesfully reduced carbon footprint",
-                    StartupId = medDentsId
+                    StartupId = cleantechStartupId
                 });
 
             builder.Entity<StartupContent>()
@@ -156,7 +158,7 @@ namespace Server.Features.EFCore
                     Type = Shared.ContentFeed.NewsType.Achievement,
                     Id = System.Guid.NewGuid(),
                     Title = "ISO certification",
-                    StartupId = medDentsId
+                    StartupId = cleantechStartupId
                 });
 
             builder.Entity<StartupContent>()
@@ -168,7 +170,7 @@ namespace Server.Features.EFCore
                     Type = Shared.ContentFeed.NewsType.Achievement,
                     Id = System.Guid.NewGuid(),
                     Title = "Prevented a hacker attack",
-                    StartupId = medDentsId
+                    StartupId = cleantechStartupId
                 });
 
             builder.Entity<StartupContent>()
@@ -180,7 +182,7 @@ namespace Server.Features.EFCore
                     Type = Shared.ContentFeed.NewsType.Team,
                     Id = System.Guid.NewGuid(),
                     Title = "Re-org to ensure competitivness",
-                    StartupId = medDentsId
+                    StartupId = cleantechStartupId
                 });
 
             builder.Entity<StartupContent>()
@@ -192,7 +194,7 @@ namespace Server.Features.EFCore
                     Type = Shared.ContentFeed.NewsType.ESG,
                     Id = System.Guid.NewGuid(),
                     Title = "working remote saves emissions",
-                    StartupId = medDentsId
+                    StartupId = cleantechStartupId
                 });
 
             builder.Entity<StartupContent>()
@@ -204,8 +206,10 @@ namespace Server.Features.EFCore
                    Type = Shared.ContentFeed.NewsType.ESG,
                    Id = System.Guid.NewGuid(),
                    Title = "working remote saves emissions",
-                   StartupId = medDentsId
+                   StartupId = cleantechStartupId
                });
+
+            var aiFarmersId = Guid.NewGuid();
 
             builder.Entity<StartUp>()
                 .HasData(new StartUp
@@ -217,7 +221,7 @@ namespace Server.Features.EFCore
                     FounderEmail = "aiFarmers@email.com",
                     Name = "AI Farmers",
                     URI = "www.farmingwithai.com",
-                    Id = System.Guid.NewGuid()
+                    Id = aiFarmersId,
                 });
 
             builder.Entity<Founder>()
@@ -236,7 +240,8 @@ namespace Server.Features.EFCore
                     Startup = "AI Farmers",
                     Type = Shared.ContentFeed.NewsType.Achievement,
                     Id = System.Guid.NewGuid(),
-                    Title = "Forbes LATAM Top 20 startups"
+                    Title = "Forbes LATAM Top 20 startups",
+                    StartupId = aiFarmersId,
                 });
 
             builder.Entity<StartupContent>()
@@ -247,7 +252,8 @@ namespace Server.Features.EFCore
                     Startup = "AI Farmers",
                     Type = Shared.ContentFeed.NewsType.Funding,
                     Id = System.Guid.NewGuid(),
-                    Title = "Big series A"
+                    Title = "Big series A",
+                    StartupId = aiFarmersId
                 });
 
             builder.Entity<StartupContent>()
@@ -258,8 +264,35 @@ namespace Server.Features.EFCore
                     Startup = "AI Farmers",
                     Type = Shared.ContentFeed.NewsType.Team,
                     Id = System.Guid.NewGuid(),
-                    Title = "Open jobs in engineering"
+                    Title = "Open jobs in engineering",
+                    StartupId = aiFarmersId
                 });
+
+            builder.Entity<StartupContent>()
+                .HasData(new StartupContent
+                {
+                    Date = DateTime.Now.AddDays(-100),
+                    Description = "We are currently managing more then 100 square kilometres of farm land",
+                    Startup = "AI Farmers",
+                    Type = Shared.ContentFeed.NewsType.Achievement,
+                    Id = System.Guid.NewGuid(),
+                    Title = "Managing more then 100 square kilometres of farm land",
+                    StartupId = aiFarmersId
+                });
+
+            builder.Entity<StartupContent>()
+               .HasData(new StartupContent
+               {
+                   Date = DateTime.Now.AddDays(-50),
+                   Description = "We are developping are more resilient type of seeds together with our parterns",
+                   Startup = "AI Farmers",
+                   Type = Shared.ContentFeed.NewsType.ESG,
+                   Id = System.Guid.NewGuid(),
+                   Title = "Developing more resilient seed type",
+                   StartupId = aiFarmersId
+               });
+
+            var biteAiId = Guid.NewGuid();
 
             builder.Entity<StartUp>()
                 .HasData(new StartUp
@@ -271,7 +304,7 @@ namespace Server.Features.EFCore
                     FounderEmail = "aiRestaurant@email.com",
                     Name = "BiteAI",
                     URI = "www.biteai.com",
-                    Id = System.Guid.NewGuid()
+                    Id = biteAiId
                 });
 
             builder.Entity<Founder>()
@@ -290,7 +323,8 @@ namespace Server.Features.EFCore
                     Startup = "BiteAI",
                     Type = Shared.ContentFeed.NewsType.Achievement,
                     Id = System.Guid.NewGuid(),
-                    Title = "100 customer"
+                    Title = "100 customer",
+                    StartupId = biteAiId
                 });
 
             builder.Entity<StartupContent>()
@@ -301,8 +335,35 @@ namespace Server.Features.EFCore
                     Startup = "BiteAI",
                     Type = Shared.ContentFeed.NewsType.ESG,
                     Id = System.Guid.NewGuid(),
-                    Title = "We minimize food waste with AI"
+                    Title = "We minimize food waste with AI",
+                    StartupId = biteAiId
                 });
+
+            builder.Entity<StartupContent>()
+                .HasData(new StartupContent
+                {
+                    Date = DateTime.Now.AddDays(-220),
+                    Description = "We now operate with a Co-Ceo",
+                    Startup = "BiteAI",
+                    Type = Shared.ContentFeed.NewsType.Team,
+                    Id = System.Guid.NewGuid(),
+                    Title = "Starting with 2 Co-Ceos",
+                    StartupId = biteAiId
+                });
+
+            builder.Entity<StartupContent>()
+                .HasData(new StartupContent
+                {
+                    Date = DateTime.Now.AddDays(-120),
+                    Description = "We are actively searching for new investors",
+                    Startup = "BiteAI",
+                    Type = Shared.ContentFeed.NewsType.Funding,
+                    Id = System.Guid.NewGuid(),
+                    Title = "Searching for new investors",
+                    StartupId = biteAiId
+                });
+
+            var searchLawId = Guid.NewGuid();
 
             builder.Entity<StartUp>()
                 .HasData(new StartUp
@@ -314,7 +375,8 @@ namespace Server.Features.EFCore
                     FounderEmail = "legaltech@email.com",
                     Name = "SearchLaw",
                     URI = "www.searchlaw.com",
-                    Id = System.Guid.NewGuid()
+                    Id = searchLawId,
+
                 });
 
             builder.Entity<Founder>()
@@ -333,8 +395,23 @@ namespace Server.Features.EFCore
                     Startup = "BiteAI",
                     Type = Shared.ContentFeed.NewsType.Achievement,
                     Id = System.Guid.NewGuid(),
-                    Title = "Licensed for use in courts"
+                    Title = "Licensed for use in courts",
+                    StartupId = searchLawId
                 });
+
+            builder.Entity<StartupContent>()
+               .HasData(new StartupContent
+               {
+                   Date = DateTime.Now.AddDays(-24),
+                   Description = "We are now partnering with charities",
+                   Startup = "BiteAI",
+                   Type = Shared.ContentFeed.NewsType.ESG,
+                   Id = System.Guid.NewGuid(),
+                   Title = "Partnerin with charities",
+                   StartupId = searchLawId
+               });
+
+            var guidFibreIds = Guid.NewGuid();
 
             builder.Entity<StartUp>()
                 .HasData(new StartUp
@@ -346,7 +423,7 @@ namespace Server.Features.EFCore
                     FounderEmail = "fibers@email.com",
                     Name = "Fiberfficient",
                     URI = "www.fiberficcient.com",
-                    Id = System.Guid.NewGuid()
+                    Id = guidFibreIds
                 });
 
             builder.Entity<Founder>()
@@ -356,6 +433,18 @@ namespace Server.Features.EFCore
                     MobileNumber = "45454556",
                     Id = System.Guid.NewGuid()
                 });
+
+            builder.Entity<StartupContent>()
+               .HasData(new StartupContent
+               {
+                   Date = DateTime.Now.AddDays(-24),
+                   Description = "We are enabling scientific breakthroughs",
+                   Startup = "BiteAI",
+                   Type = Shared.ContentFeed.NewsType.ESG,
+                   Id = System.Guid.NewGuid(),
+                   Title = "Enabling scientific breakthroughs",
+                   StartupId = guidFibreIds
+               });
 
             base.OnModelCreating(builder);
         }

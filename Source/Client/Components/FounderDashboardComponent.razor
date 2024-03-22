@@ -18,8 +18,8 @@
             </div>
             <div class="w-[190px] rounded rounded-b-none border-orange border-b-[6px] bg-grey-200 p-1 flex flex-row">
                 <div class="self-end">
-                    <h3 class="text-xl font-medium">22.1 Million</h3>
-                    <h3>Funding for fellows</h3>
+                    <h3 class="text-xl font-medium">@knowledgeBase</h3>
+                    <h3>knowledge base entries</h3>
                 </div>
             </div>
             <div class="w-[190px] rounded rounded-b-none border-orange border-b-[6px] bg-grey-200 p-1 flex flex-row">
@@ -93,7 +93,7 @@
 @code {
     private int fellowCount;
     private int startupCount;
-
+    private int knowledgeBase;
     private string mobileNumber;
 
     private async Task UpdatePhoneNumberasync(ChangeEventArgs changeEventArgs)
@@ -112,6 +112,7 @@
 
         fellowCount = await httpClientService.GetFromAPIAsync<int>("/founders/count");
         startupCount = await httpClientService.GetFromAPIAsync<int>("/startups/count");
+        knowledgeBase = await httpClientService.GetFromAPIAsync<int>("/contentfeeds/count");
 
         HubConnection.On("/NewStartup", async () =>
         {
