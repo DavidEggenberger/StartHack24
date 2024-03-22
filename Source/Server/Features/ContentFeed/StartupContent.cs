@@ -12,5 +12,7 @@ namespace Server.Features.ContentFeed
         public string Description { get; set; }
         public string Domain { get; set; }
         public string Title { get; set; }
+        public Guid StartupId { get; set; }
     }
 }
+
