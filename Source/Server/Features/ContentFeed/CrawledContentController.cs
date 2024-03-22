@@ -44,6 +44,16 @@ namespace Server.Features.ContentFeed
 
             ApplicationDbContext.CrawledContents.Remove(content);
 
+            var startupContent = new StartupContent
+            {
+                Date = DateTime.Now,
+                Startup = content.Startup,
+                Title = content.Title,
+                Description = content.Content
+            };
+
+            ApplicationDbContext.StartupContents.Add(startupContent);
+
             await ApplicationDbContext.SaveChangesAsync();
 
             await HubContext.Clients.All.SendAsync("crawledupdate");

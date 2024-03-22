@@ -41,7 +41,7 @@ namespace Server.Features.WhatsAppMessaging
 
             //var startUp = await ApplicationDbContext.Startups.Where(s => s.FounderEmail == founder.Email).FirstOrDefaultAsync(); 
 
-            ApplicationDbContext.CrawledContents.Add(new CrawledContent { Content = requestBody, Startup = "startUp.Name"});
+            ApplicationDbContext.CrawledContents.Add(new CrawledContent { Content = requestBody, Startup = "Davids Startup", Title = "Funding" });
 
             await ApplicationDbContext.SaveChangesAsync();
 
