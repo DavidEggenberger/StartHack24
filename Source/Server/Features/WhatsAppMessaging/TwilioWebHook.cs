@@ -9,6 +9,7 @@ using Twilio.TwiML.Messaging;
 using Twilio.TwiML;
 using Twilio.AspNet.Core;
 using System.Threading.Tasks;
+using Server.Features.EFCore;
 
 namespace Server.Features.WhatsAppMessaging
 {
@@ -16,6 +17,13 @@ namespace Server.Features.WhatsAppMessaging
     [ApiController]
     public class TwilioWebHook : ControllerBase
     {
+        private ApplicationDbContext ApplicationDbContext;
+
+        public TwilioWebHook(ApplicationDbContext ApplicationDbContext)
+        {
+            this.ApplicationDbContext = ApplicationDbContext;
+        }
+
         [HttpPost]
         public async Task<ActionResult> Create()
         {
@@ -29,6 +37,10 @@ namespace Server.Features.WhatsAppMessaging
             {
                 response.Message("Goodbye");
             }
+
+            ApplicationDbContext.StartupContents.Add(new ContentFeed.StartupContent { Description = requestBody });
+
+            await ApplicationDbContext.SaveChangesAsync();
 
             return Ok();
         }
