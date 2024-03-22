@@ -14,6 +14,7 @@ namespace Server.Features.EFCore
         public DbSet<StartUp> Startups { get; set; }
         public DbSet<Founder> Founders { get; set; }
         public DbSet<StartupContent> StartupContents { get; set; }
+        public DbSet<CrawledContent> CrawledContents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

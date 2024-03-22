@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Server.Features.EFCore;
+using Server.Hubs;
 using Shared.ContentFeed;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +16,12 @@ namespace Server.Features.ContentFeed
     public class ContentFeedsController : ControllerBase
     {
         private ApplicationDbContext applicationDbContext;
+        private IHubContext<NotificationHub> hubContext;
 
-        public ContentFeedsController(ApplicationDbContext applicationDbContext)
+        public ContentFeedsController(ApplicationDbContext applicationDbContext, IHubContext<NotificationHub> hubContext)
         {
             this.applicationDbContext = applicationDbContext;
+            this.hubContext = hubContext;
         }
 
         [HttpGet]
@@ -41,17 +46,19 @@ namespace Server.Features.ContentFeed
         [HttpPost]
         public async Task<ActionResult<ContentFeedDTO>> CreateContentFeed(ContentFeedDTO contentFeedDTO)
         {
-            var startupContent = new StartupContent
+            var startupContent = new CrawledContent
             {
                 Date = contentFeedDTO.Date,
-                Domain = contentFeedDTO.Domain,
-                Description = contentFeedDTO.Content,
+                Startup = contentFeedDTO.Domain,
+                Content = contentFeedDTO.Content,
                 Title = contentFeedDTO.Title
             };
 
-            applicationDbContext.StartupContents.Add(startupContent);
+            applicationDbContext.CrawledContents.Add(startupContent);
 
             await applicationDbContext.SaveChangesAsync();
+
+            await hubContext.Clients.All.SendAsync("crawledupdate");
 
             return Ok(contentFeedDTO);
         }

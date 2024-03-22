@@ -10,6 +10,11 @@ using Twilio.TwiML;
 using Twilio.AspNet.Core;
 using System.Threading.Tasks;
 using Server.Features.EFCore;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Server.Features.ContentFeed;
+using Microsoft.AspNetCore.SignalR;
+using Server.Hubs;
 
 namespace Server.Features.WhatsAppMessaging
 {
@@ -18,29 +23,29 @@ namespace Server.Features.WhatsAppMessaging
     public class TwilioWebHook : ControllerBase
     {
         private ApplicationDbContext ApplicationDbContext;
-
-        public TwilioWebHook(ApplicationDbContext ApplicationDbContext)
+        private IHubContext<NotificationHub> hubContext;
+        public TwilioWebHook(ApplicationDbContext ApplicationDbContext, IHubContext<NotificationHub> hubContext)
         {
             this.ApplicationDbContext = ApplicationDbContext;
+            this.hubContext = hubContext;
         }
 
         [HttpPost]
         public async Task<ActionResult> Create()
         {
             var requestBody = Request.Form["Body"];
-            var response = new MessagingResponse();
-            if (requestBody == "hello")
-            {
-                response.Message("Hi!");
-            }
-            else if (requestBody == "bye")
-            {
-                response.Message("Goodbye");
-            }
 
-            ApplicationDbContext.StartupContents.Add(new ContentFeed.StartupContent { Description = requestBody });
+            var mobileNumber = Request.Form["From"].ToString().Replace("+", "");
+
+            var founder = await ApplicationDbContext.Founders.Where(f => f.MobileNumber == mobileNumber).FirstOrDefaultAsync();
+
+            var startUp = await ApplicationDbContext.Startups.Where(s => s.FounderEmail == founder.Email).FirstOrDefaultAsync(); 
+
+            ApplicationDbContext.CrawledContents.Add(new CrawledContent { Content = requestBody, Startup = startUp.Name});
 
             await ApplicationDbContext.SaveChangesAsync();
+
+            await hubContext.Clients.All.SendAsync("crawledupdate");
 
             return Ok();
         }

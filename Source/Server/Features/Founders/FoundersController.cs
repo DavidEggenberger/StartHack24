@@ -111,7 +111,7 @@ namespace Server.Features.Founders
 
             try
             {
-                TwilioWhatsAppService.SendMessage("Thanks for registrating with your phone number on FellowshipFinder!", founder.MobileNumber);
+                TwilioWhatsAppService.SendMessage("Thanks for registrating with your phone number on FellowshipFinder! Whenever you have an update for your startup you can now write it in the chat. We then add it to the knowledge base.", founder.MobileNumber);
             }
             catch (Exception ex)
             {
