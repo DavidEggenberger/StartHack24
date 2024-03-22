@@ -35,13 +35,13 @@ namespace Server.Features.WhatsAppMessaging
         {
             var requestBody = Request.Form["Body"];
 
-            var mobileNumber = Request.Form["From"].ToString().Replace("+", "");
+            //var mobileNumber = Request.Form["From"].ToString().Replace("+", "");
 
-            var founder = await ApplicationDbContext.Founders.Where(f => f.MobileNumber == mobileNumber).FirstOrDefaultAsync();
+            //var founder = await ApplicationDbContext.Founders.Where(f => f.MobileNumber == mobileNumber).FirstOrDefaultAsync();
 
-            var startUp = await ApplicationDbContext.Startups.Where(s => s.FounderEmail == founder.Email).FirstOrDefaultAsync(); 
+            //var startUp = await ApplicationDbContext.Startups.Where(s => s.FounderEmail == founder.Email).FirstOrDefaultAsync(); 
 
-            ApplicationDbContext.CrawledContents.Add(new CrawledContent { Content = requestBody, Startup = startUp.Name});
+            ApplicationDbContext.CrawledContents.Add(new CrawledContent { Content = requestBody, Startup = "startUp.Name"});
 
             await ApplicationDbContext.SaveChangesAsync();
 

@@ -113,12 +113,12 @@
 
     private async Task DeleteCrawledAsync(Guid id)
     {
-        await httpClientService.DeleteFromAPIAsync($"/crawledcontent/", id);
+        await httpClientService.DeleteFromAPIAsync($"/crawledcontent", id);
     }
 
     private async Task MoveCrawledAsync(Guid id)
     {
-        await httpClientService.PostToAPIAsync($"/crawledcontent/{id}", new { });
+        await httpClientService.PostToAPIAsync($"/crawledcontent/{id}", new { 78 });
     }
 
     public void OpenSignUpModal(string type)
