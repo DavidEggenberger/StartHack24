@@ -152,13 +152,13 @@
 
         crawledContents = await httpClientService.GetFromAPIAsync<List<CrawledContentDTO>>("/crawledcontent");
 
-        HubConnection.On("/NewStartup", async () =>
+        HubConnection.On("NewStartup", async () =>
         {
             startupCount = await httpClientService.GetFromAPIAsync<int>("/startups/count");
             StateHasChanged();
         });
 
-        HubConnection.On("/crawledupdate", async () =>
+        HubConnection.On("crawledupdate", async () =>
         {
             crawledContents = await httpClientService.GetFromAPIAsync<List<CrawledContentDTO>>("/crawledcontent");
             StateHasChanged();
