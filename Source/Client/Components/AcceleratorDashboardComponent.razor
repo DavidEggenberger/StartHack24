@@ -48,7 +48,7 @@
                     <h5 class="text-sm">Move the crawled content to the knowledge base or ignore it</h5>
                 </div>
                 <div class="h-full">
-                    @if (crawledContents != null)
+                    @if (crawledContents != null && crawledContents.Any())
                     {
                         <div class="grid content-between mt-3">
                             <div>
@@ -113,12 +113,12 @@
 
     private async Task DeleteCrawledAsync(Guid id)
     {
-        await httpClientService.DeleteFromAPIAsync($"/crawledcontent/{id}");
+        await httpClientService.DeleteFromAPIAsync($"/crawledcontent/", id);
     }
 
     private async Task MoveCrawledAsync(Guid id)
     {
-        await httpClientService.PostToAPIAsync($"/crawledcontent/{id}");
+        await httpClientService.PostToAPIAsync($"/crawledcontent/{id}", new { });
     }
 
     public void OpenSignUpModal(string type)
